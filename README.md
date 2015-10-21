@@ -50,6 +50,7 @@ user=qlserver
 process_name=qlds_%(process_num)s
 numprocs=2
 autorestart=true
+environment=HOME="/home/qlserver",USER="qlserver"
 ```
 
 # TODO

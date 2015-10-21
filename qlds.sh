@@ -3,6 +3,11 @@
 # Usage: https://github.com/rzeka/QLDS-Manager
 # Last update: 2015-10-21
 
+if [[ $HOME == '' ]]; then
+    echo "No home dir available"
+    exit 1
+fi
+
 STEAMCMD_DIR="$HOME/steamcmd"
 QL_DIR="$HOME/QLserver"
 
