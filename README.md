@@ -7,8 +7,10 @@
 
 To change those directories, open `qlds.sh` script and edit lines 6 and 7:
 
-`STEAMCMD_DIR="$HOME/steamcmd"
-QL_DIR="$HOME/QLserver"`
+```bash
+STEAMCMD_DIR="$HOME/steamcmd"
+QL_DIR="$HOME/QLserver"
+```
 
 ## SteamCMD
 
@@ -41,12 +43,14 @@ There are 2 servers configures in there. If You need some help with creating ano
 
 ## Example supervisord config
 
-`[program:qlds]
+```bash
+[program:qlds]
 command=/home/qlserver/qldsmanager.sh run /home/qlserver/qlds_config %(process_num)s
 user=qlserver
 process_name=qlds_%(process_num)s
 numprocs=2
-autorestart=true`
+autorestart=true
+```
 
 # TODO
 
