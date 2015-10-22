@@ -34,6 +34,12 @@ if [[ $1 == "steamcmd" ]]; then
     tar zxf $STEAMCMD_ARCHIVE
     chmod +x steamcmd.sh
 
+	if [ `uname -m` == 'x86_64' ]; then
+        dpkg --add-architecture i386 
+		apt-get update
+		apt-get install lib32stdc++6
+	fi
+	
     echo "SteamCMD installed in $STEAMCMD_DIR"
 elif [[ $1 == "update" ]]; then
     if [[ ! -f $STEAMCMD_DIR/steamcmd.sh || ! -x $STEAMCMD_DIR/steamcmd.sh ]]; then
