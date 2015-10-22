@@ -16,6 +16,8 @@ QL_APPID="349090"
 STEAMCMD_URL="https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz"
 STEAMCMD_ARCHIVE="steamcmd_linux.tar.gz"
 
+STEAMAPI_VERSION_CHECK="https://api.steampowered.com/ISteamApps/UpToDateCheck/v1/?&format=json&appid=282440&version="
+
 if [[ $1 == "steamcmd" ]]; then
     if [[ -d $STEAMCMD_DIR ]]; then
         echo "SteamCMD directory already exists - remove it before installing SteamCMD again"
@@ -34,16 +36,16 @@ if [[ $1 == "steamcmd" ]]; then
     tar zxf $STEAMCMD_ARCHIVE
     chmod +x steamcmd.sh
 
-	if [ `uname -m` == 'x86_64' ]; then
+    if [ `uname -m` == 'x86_64' ]; then
         SUDO=''
         if [ `id -u` -ne 0 ]; then
             SUDO='sudo'
         fi
 
         $SUDO dpkg --add-architecture i386
-		$SUDO apt-get update
-		$SUDO apt-get install lib32stdc++6
-	fi
+        $SUDO apt-get update
+        $SUDO apt-get install lib32stdc++6
+    fi
 
     echo "SteamCMD installed in $STEAMCMD_DIR"
 elif [[ $1 == "update" ]]; then
@@ -53,6 +55,27 @@ elif [[ $1 == "update" ]]; then
     fi
 
     exec $STEAMCMD_DIR/steamcmd.sh +login anonymous +force_install_dir $QL_DIR +app_update $QL_APPID +quit
+    echo "QLDS updated"
+elif [[ $1 == "supervisor-update" ]]; then
+    if [ ! -x "$(command -v supervisorctl)" ]; then
+        echo "Supervisor (supervisorctl) not found"
+        exit 1
+    fi
+
+    if [[ check_outdated -eq 1 ]]; then
+        SERVER_LIST=$(supervisorctl avail | grep qlds | awk '{print $1}' ORS=' ')
+        echo "Stopping all supervisord QLDS tagged instances"
+        supervisorctl stop $SERVER_LIST
+
+        echo "Updating servers"
+        $0 update
+
+        echo "Servers back online"
+        supervisorctl start $SERVER_LIST
+    else
+        echo "No update required"
+        exit
+    fi
 elif [[ $1 == "run" ]]; then
     if [[ $2 == '' || ! -f $2 ]]; then
         echo "You have to pass config location as parameter eg.:"
@@ -84,4 +107,22 @@ else
     echo "    $0 steamcmd - installs steamcmd"
     echo "    $0 update - updates QL server files"
     echo "    $0 run [server config file] [server id] - run server using specified config and id"
+    echo "    $0 supervisor-update - disables all server managed by supervisord and performs an update"
 fi
+
+check_outdated() {
+    QL_VERSION=$(strings $QL_DIR/qzeroded.x86 | grep "linux-i386" | awk '{print $1}' ORS='')
+    QL_UP_TO_DATE="false"
+
+    if [ ! -x "$(command -v wget)" ]; then
+        QL_UP_TO_DATE=$(wget -qO- $STEAMAPI_VERSION_CHECK$QL_VERSION | grep "up_to_date" | awk '{print $2}' RS=',' ORS='')
+    else
+        QL_UP_TO_DATE=$(curl -s $STEAMAPI_VERSION_CHECK$QL_VERSION | grep "up_to_date" | awk '{print $2}' RS=',' ORS='')
+    fi
+
+    if [[ $QL_UP_TO_DATE == 'false' ]]; then
+        echo 1
+    else
+        echo 0
+    fi
+}
