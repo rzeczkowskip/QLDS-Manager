@@ -35,11 +35,16 @@ if [[ $1 == "steamcmd" ]]; then
     chmod +x steamcmd.sh
 
 	if [ `uname -m` == 'x86_64' ]; then
-        dpkg --add-architecture i386 
-		apt-get update
-		apt-get install lib32stdc++6
+        SUDO=''
+        if [ `id -u` -ne 0 ]; then
+            SUDO='sudo'
+        fi
+
+        $SUDO dpkg --add-architecture i386
+		$SUDO apt-get update
+		$SUDO apt-get install lib32stdc++6
 	fi
-	
+
     echo "SteamCMD installed in $STEAMCMD_DIR"
 elif [[ $1 == "update" ]]; then
     if [[ ! -f $STEAMCMD_DIR/steamcmd.sh || ! -x $STEAMCMD_DIR/steamcmd.sh ]]; then
