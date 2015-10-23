@@ -54,6 +54,7 @@ elif [[ $1 == "update" ]]; then
         exit 1
     fi
 
+    echo "Updating QLDS files"
     exec $STEAMCMD_DIR/steamcmd.sh +login anonymous +force_install_dir $QL_DIR +app_update $QL_APPID +quit
     echo "QLDS updated"
 elif [[ $1 == "supervisor-update" ]]; then
@@ -64,11 +65,12 @@ elif [[ $1 == "supervisor-update" ]]; then
 
     if [[ check_outdated -eq 1 ]]; then
         SERVER_LIST=$(supervisorctl avail | grep qlds | awk '{print $1}' ORS=' ')
-        echo "Stopping all supervisord QLDS tagged instances"
-        supervisorctl stop $SERVER_LIST
 
         echo "Updating servers"
         $0 update
+
+        echo "Stopping all supervisord QLDS tagged instances"
+        supervisorctl stop $SERVER_LIST
 
         echo "Servers back online"
         supervisorctl start $SERVER_LIST
@@ -87,6 +89,8 @@ elif [[ $1 == "run" ]]; then
         echo "You have to pass server ID you want to start"
         exit 1
     fi
+
+    update_if_required
 
     . $2
 
@@ -124,5 +128,11 @@ check_outdated() {
         echo 1
     else
         echo 0
+    fi
+}
+
+update_if_required() {
+    if [[ check_outdated -eq 1 ]]; then
+        $0 update
     fi
 }
