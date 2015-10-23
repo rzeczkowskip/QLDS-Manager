@@ -1,7 +1,7 @@
 #!/bin/bash
 # Created by: Piotr "rzeka" Rzeczkowski <piotr@rzeka.net>
 # Usage: https://github.com/rzeka/QLDS-Manager
-# Last update: 2015-10-21
+# Last update: 2015-10-23
 
 if [[ $HOME == '' ]]; then
     echo "No home dir available"
