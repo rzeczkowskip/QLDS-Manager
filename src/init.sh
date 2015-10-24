@@ -2,7 +2,7 @@
 # https://github.com/rzeka/QLDS-Manager
 
 if [[ $1 == "steamcmd" ]]; then
-    command_steamcmd
+    command_steamcmd $2
 elif [[ $1 == "update" ]]; then
     command_update
 elif [[ $1 == "supervisor-update" ]]; then
