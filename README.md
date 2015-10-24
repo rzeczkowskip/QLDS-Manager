@@ -5,7 +5,7 @@
 * SteamCMD - `$HOME/steamcmd/`
 * QL server files - `$HOME/QLserver`
 
-To change those directories, open `qlds.sh` script and edit lines 6 and 7:
+To change those directories, open `qlds.sh` script and edit those lines:
 
 ```bash
 STEAMCMD_DIR="$HOME/steamcmd"
