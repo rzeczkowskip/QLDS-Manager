@@ -1,5 +1,9 @@
 # QLDS Manager
 
+## Download
+
+Grab the latest stable version from https://github.com/rzeka/QLDS-Manager/releases
+
 ## Default locations
 
 * SteamCMD - `$HOME/steamcmd/`
