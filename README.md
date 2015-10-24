@@ -28,8 +28,8 @@ To install or update QL server files
 
 To run server, use script with `run` argument. It requires 2 additional arguments:
 
-* Server config file location
-* Server ID
+* Server-list file location
+* Server ID from server-list
 
 Eg.:
 `./qlds.sh run /home/qlserver/qlds_config 0`
