@@ -4,6 +4,7 @@ QLDS_OUT="$QLDS_DIR/qlds.sh"
 
 FILES="src/config.sh
 src/update_check.sh
+src/list_load.sh
 src/command/*
 src/init.sh"
 
