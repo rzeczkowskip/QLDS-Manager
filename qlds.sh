@@ -20,8 +20,11 @@ check_outdated() {
 
     if [ ! -x "$(command -v wget)" ]; then
         QL_UP_TO_DATE=$(wget -qO- $STEAMAPI_VERSION_CHECK$QL_VERSION | grep "up_to_date" | awk '{print $2}' RS=',' ORS='')
-    else
+    elif [ ! -x "$(command -v curl)" ]; then
         QL_UP_TO_DATE=$(curl -s $STEAMAPI_VERSION_CHECK$QL_VERSION | grep "up_to_date" | awk '{print $2}' RS=',' ORS='')
+    else
+        echo "Neither \"curl\" nor \"wget\" is installed. Please install one and re-run this script."
+        exit 1
     fi
 
     if [[ $QL_UP_TO_DATE == 'false' ]]; then
