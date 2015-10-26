@@ -3,6 +3,7 @@ QLDS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 QLDS_OUT="$QLDS_DIR/qlds.sh"
 
 FILES="src/config.sh
+src/check_wget.sh
 src/update_check.sh
 src/list_load.sh
 src/command/*
