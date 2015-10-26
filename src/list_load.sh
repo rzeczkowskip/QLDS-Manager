@@ -6,5 +6,5 @@ load_server_list() {
         exit 1
     fi
 
-    . $1
+    . "$1"
 }

@@ -68,19 +68,19 @@ load_server_list() {
         exit 1
     fi
 
-    . $1
+    . "$1"
 }
 command_monitor() {
-    load_server_list $1
+    load_server_list "$1"
 
     #If no ID is passed, get all IDs and re-run minitor for each id
     if [[ $2 == '' ]]; then
         #get keys from $SERVER
         for ID in ${!SERVER[*]}; do
-            $0 monitor $1 $ID &
+            $0 monitor "$1" "$ID" &
         done
     else
-        until $0 run $1 $2; do
+        until $0 run "$1" "$2"; do
             echo "Restarting server $2"
             sleep 1 # sleep, so if server always exits unexpectedly, we won't kill server
         done
@@ -92,7 +92,7 @@ command_run() {
         exit 1
     fi
 
-    load_server_list $1
+    load_server_list "$1"
 
     update_if_required
 
@@ -106,7 +106,7 @@ command_run() {
     if [[ $SERVER_CONFIG == '' ]]; then
         echo "Server config $2 doesn't exists!"
     else
-        exec $QL_DIR/$QL_EXEC $SERVER_CONFIG
+        exec "$QL_DIR/$QL_EXEC $SERVER_CONFIG"
     fi
 }
 command_steamcmd() {
@@ -136,20 +136,20 @@ command_steamcmd() {
         $SUDO apt-get -q install lib32stdc++6
     fi
 
-    mkdir $STEAMCMD_DIR
-    cd $STEAMCMD_DIR
+    mkdir "$STEAMCMD_DIR"
+    cd "$STEAMCMD_DIR"
 
     if [[ check_wget ]]; then
-        wget $STEAMCMD_URL
+        wget "$STEAMCMD_URL"
     elif [[ check_curl ]]; then
-        curl -O $STEAMCMD_URL
+        curl -O "$STEAMCMD_URL"
     else
         cd "$QLDS_MANAGER_DIR"
-        rm -rf $STEAMCMD_DIR
+        rm -r "$STEAMCMD_DIR"
         download_error
     fi
 
-    tar zxf $STEAMCMD_ARCHIVE
+    tar zxf "$STEAMCMD_ARCHIVE"
     chmod +x steamcmd.sh
 
     echo "SteamCMD installed in $STEAMCMD_DIR"
@@ -177,13 +177,13 @@ command_supervisor_update() {
     fi
 }
 command_update() {
-    if [[ ! -f $STEAMCMD_DIR/steamcmd.sh || ! -x $STEAMCMD_DIR/steamcmd.sh ]]; then
+    if [[ ! -f "$STEAMCMD_DIR/steamcmd.sh" || ! -x "$STEAMCMD_DIR/steamcmd.sh" ]]; then
         echo "Cannot find SteamCMD"
         exit 1
     fi
 
     echo "Updating QLDS files"
-    exec $STEAMCMD_DIR/steamcmd.sh +login anonymous +force_install_dir $QL_DIR +app_update $QL_APPID +quit
+    exec "$STEAMCMD_DIR/steamcmd.sh" +login anonymous +force_install_dir "$QL_DIR" +app_update $QL_APPID +quit
     echo "QLDS updated"
 }
 # https://github.com/rzeka/QLDS-Manager

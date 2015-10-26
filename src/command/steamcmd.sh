@@ -26,20 +26,20 @@ command_steamcmd() {
         $SUDO apt-get -q install lib32stdc++6
     fi
 
-    mkdir $STEAMCMD_DIR
-    cd $STEAMCMD_DIR
+    mkdir "$STEAMCMD_DIR"
+    cd "$STEAMCMD_DIR"
 
     if [[ check_wget ]]; then
-        wget $STEAMCMD_URL
+        wget "$STEAMCMD_URL"
     elif [[ check_curl ]]; then
-        curl -O $STEAMCMD_URL
+        curl -O "$STEAMCMD_URL"
     else
         cd "$QLDS_MANAGER_DIR"
-        rm -rf $STEAMCMD_DIR
+        rm -r "$STEAMCMD_DIR"
         download_error
     fi
 
-    tar zxf $STEAMCMD_ARCHIVE
+    tar zxf "$STEAMCMD_ARCHIVE"
     chmod +x steamcmd.sh
 
     echo "SteamCMD installed in $STEAMCMD_DIR"
