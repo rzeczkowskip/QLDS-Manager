@@ -3,10 +3,12 @@ check_outdated() {
     QL_VERSION=$(strings $QL_DIR/qzeroded.x86 | grep "linux-i386" | awk '{print $1}' ORS='')
     QL_UP_TO_DATE="false"
 
-    if [ ! -x "$(command -v wget)" ]; then
+    if [ check_wget ]; then
         QL_UP_TO_DATE=$(wget -qO- $STEAMAPI_VERSION_CHECK$QL_VERSION | grep "up_to_date" | awk '{print $2}' RS=',' ORS='')
-    else
+    elif [ check_curl ]; then
         QL_UP_TO_DATE=$(curl -s $STEAMAPI_VERSION_CHECK$QL_VERSION | grep "up_to_date" | awk '{print $2}' RS=',' ORS='')
+    else
+        download_error
     fi
 
     if [[ $QL_UP_TO_DATE == 'false' ]]; then

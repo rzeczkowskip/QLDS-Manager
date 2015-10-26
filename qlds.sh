@@ -9,19 +9,44 @@ fi
 STEAMCMD_DIR="$HOME/steamcmd"
 QL_DIR="$HOME/QLserver"
 
+QLDS_MANAGER_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 QL_APPID="349090"
 STEAMCMD_URL="https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz"
 STEAMCMD_ARCHIVE="steamcmd_linux.tar.gz"
 
 STEAMAPI_VERSION_CHECK="https://api.steampowered.com/ISteamApps/UpToDateCheck/v1/?&format=json&appid=282440&version="
+check_wget () {
+  if [ ! -x "$(command -v wget)" ]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+check_curl() {
+    if [ ! -x "$(command -v curl)" ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+download_error() {
+    echo "Neither \"curl\" nor \"wget\" is installed."
+    echo "Please install one and re-run this script."
+    exit 1
+}
 check_outdated() {
     QL_VERSION=$(strings $QL_DIR/qzeroded.x86 | grep "linux-i386" | awk '{print $1}' ORS='')
     QL_UP_TO_DATE="false"
 
-    if [ ! -x "$(command -v wget)" ]; then
+    if [ check_wget ]; then
         QL_UP_TO_DATE=$(wget -qO- $STEAMAPI_VERSION_CHECK$QL_VERSION | grep "up_to_date" | awk '{print $2}' RS=',' ORS='')
-    else
+    elif [ check_curl ]; then
         QL_UP_TO_DATE=$(curl -s $STEAMAPI_VERSION_CHECK$QL_VERSION | grep "up_to_date" | awk '{print $2}' RS=',' ORS='')
+    else
+        download_error
     fi
 
     if [[ $QL_UP_TO_DATE == 'false' ]]; then
@@ -114,10 +139,14 @@ command_steamcmd() {
     mkdir $STEAMCMD_DIR
     cd $STEAMCMD_DIR
 
-    if [ ! -x "$(command -v wget)" ]; then
+    if [[ check_wget ]]; then
         wget $STEAMCMD_URL
-    else
+    elif [[ check_curl ]]; then
         curl -O $STEAMCMD_URL
+    else
+        cd "$QLDS_MANAGER_DIR"
+        rm -rf $STEAMCMD_DIR
+        download_error
     fi
 
     tar zxf $STEAMCMD_ARCHIVE

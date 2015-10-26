@@ -29,10 +29,14 @@ command_steamcmd() {
     mkdir $STEAMCMD_DIR
     cd $STEAMCMD_DIR
 
-    if [ ! -x "$(command -v wget)" ]; then
+    if [[ check_wget ]]; then
         wget $STEAMCMD_URL
-    else
+    elif [[ check_curl ]]; then
         curl -O $STEAMCMD_URL
+    else
+        cd "$QLDS_MANAGER_DIR"
+        rm -rf $STEAMCMD_DIR
+        download_error
     fi
 
     tar zxf $STEAMCMD_ARCHIVE
