@@ -14,17 +14,14 @@ STEAMCMD_URL="https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.ta
 STEAMCMD_ARCHIVE="steamcmd_linux.tar.gz"
 
 STEAMAPI_VERSION_CHECK="https://api.steampowered.com/ISteamApps/UpToDateCheck/v1/?&format=json&appid=282440&version="
+
+
 check_outdated() {
     QL_VERSION=$(strings $QL_DIR/qzeroded.x86 | grep "linux-i386" | awk '{print $1}' ORS='')
     QL_UP_TO_DATE="false"
 
-    if [ ! -x "$(command -v wget)" ]; then
+    if [ check_wget -eq 1 ]; then
         QL_UP_TO_DATE=$(wget -qO- $STEAMAPI_VERSION_CHECK$QL_VERSION | grep "up_to_date" | awk '{print $2}' RS=',' ORS='')
-    elif [ ! -x "$(command -v curl)" ]; then
-        QL_UP_TO_DATE=$(curl -s $STEAMAPI_VERSION_CHECK$QL_VERSION | grep "up_to_date" | awk '{print $2}' RS=',' ORS='')
-    else
-        echo "Neither \"curl\" nor \"wget\" is installed. Please install one and re-run this script."
-        exit 1
     fi
 
     if [[ $QL_UP_TO_DATE == 'false' ]]; then
@@ -47,6 +44,14 @@ load_server_list() {
     fi
 
     . $1
+}
+check_wget() {
+    if [ ! -x "$(command -v wget)" ]; then
+        return 1
+    else
+        echo "\"wget\" is not installed. Please install \"wget\" and re-run this script."
+        exit 1
+    fi
 }
 command_monitor() {
     load_server_list $1
@@ -117,10 +122,8 @@ command_steamcmd() {
     mkdir $STEAMCMD_DIR
     cd $STEAMCMD_DIR
 
-    if [ ! -x "$(command -v wget)" ]; then
+    if [ check_wget -eq 1 ]; then
         wget $STEAMCMD_URL
-    else
-        curl -O $STEAMCMD_URL
     fi
 
     tar zxf $STEAMCMD_ARCHIVE
