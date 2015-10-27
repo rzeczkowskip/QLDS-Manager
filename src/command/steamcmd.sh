@@ -21,6 +21,8 @@ command_steamcmd() {
 
         read
 
+        echo "Please wait, while packages are checked..."
+
         $SUDO dpkg --add-architecture i386
         $SUDO apt-get -qq update
         $SUDO apt-get -q install lib32stdc++6

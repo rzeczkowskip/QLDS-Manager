@@ -20,9 +20,6 @@ STEAMAPI_VERSION_CHECK="https://api.steampowered.com/ISteamApps/UpToDateCheck/v1
 if [[ -f "$HOME/.qlds_manager" ]]; then
     . "$HOME/.qlds_manager"
 fi
-
-echo $QL_APPID
-exit 1
 check_wget () {
   if [ ! -x "$(command -v wget)" ]; then
     return 0
@@ -137,6 +134,8 @@ command_steamcmd() {
         echo "Press [ENTER] to continue"
 
         read
+
+        echo "Please wait, while packages are checked..."
 
         $SUDO dpkg --add-architecture i386
         $SUDO apt-get -qq update
