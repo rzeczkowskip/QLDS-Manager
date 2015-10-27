@@ -14,3 +14,7 @@ STEAMCMD_URL="https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.ta
 STEAMCMD_ARCHIVE="steamcmd_linux.tar.gz"
 
 STEAMAPI_VERSION_CHECK="https://api.steampowered.com/ISteamApps/UpToDateCheck/v1/?&format=json&appid=282440&version="
+
+if [[ -f "$HOME/.qlds_manager" ]]; then
+    . "$HOME/.qlds_manager"
+fi

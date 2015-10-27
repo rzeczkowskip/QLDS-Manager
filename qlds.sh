@@ -16,6 +16,13 @@ STEAMCMD_URL="https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.ta
 STEAMCMD_ARCHIVE="steamcmd_linux.tar.gz"
 
 STEAMAPI_VERSION_CHECK="https://api.steampowered.com/ISteamApps/UpToDateCheck/v1/?&format=json&appid=282440&version="
+
+if [[ -f "$HOME/.qlds_manager" ]]; then
+    . "$HOME/.qlds_manager"
+fi
+
+echo $QL_APPID
+exit 1
 check_wget () {
   if [ ! -x "$(command -v wget)" ]; then
     return 0
@@ -58,11 +65,11 @@ check_outdated() {
 
 update_if_required() {
     if [[ check_outdated -eq 1 ]]; then
-        $0 update
+        "$0" update
     fi
 }
 load_server_list() {
-    if [[ $1 == '' || ! -f $1 ]]; then
+    if [[ $1 == '' || ! -f "$1" ]]; then
         echo "You have to pass server-list file location as parameter eg.:"
         echo "$0 run ~/myconfig server_id"
         exit 1
@@ -77,10 +84,10 @@ command_monitor() {
     if [[ $2 == '' ]]; then
         #get keys from $SERVER
         for ID in ${!SERVER[*]}; do
-            $0 monitor "$1" "$ID" &
+            "$0" monitor "$1" "$ID" &
         done
     else
-        until $0 run "$1" "$2"; do
+        until "$0" run "$1" "$2"; do
             echo "Restarting server $2"
             sleep 1 # sleep, so if server always exits unexpectedly, we won't kill server
         done
@@ -106,11 +113,11 @@ command_run() {
     if [[ $SERVER_CONFIG == '' ]]; then
         echo "Server config $2 doesn't exists!"
     else
-        exec "$QL_DIR/$QL_EXEC $SERVER_CONFIG"
+        exec "$QL_DIR/$QL_EXEC" "$SERVER_CONFIG"
     fi
 }
 command_steamcmd() {
-    if [[ -d $STEAMCMD_DIR ]]; then
+    if [[ -d "$STEAMCMD_DIR" ]]; then
         echo "SteamCMD directory already exists - remove it before installing SteamCMD again"
         exit 1
     fi
@@ -150,7 +157,7 @@ command_steamcmd() {
     fi
 
     tar zxf "$STEAMCMD_ARCHIVE"
-    chmod +x steamcmd.sh
+    chmod +x "$STEAMCMD_DIR/steamcmd.sh"
 
     echo "SteamCMD installed in $STEAMCMD_DIR"
 }
@@ -164,7 +171,7 @@ command_supervisor_update() {
         SERVER_LIST=$(supervisorctl avail | grep qlds | awk '{print $1}' ORS=' ')
 
         echo "Updating servers"
-        $0 update
+        "$0" update
 
         echo "Stopping all supervisord QLDS tagged instances"
         supervisorctl stop $SERVER_LIST
@@ -187,16 +194,17 @@ command_update() {
     echo "QLDS updated"
 }
 # https://github.com/rzeka/QLDS-Manager
+
 if [[ $1 == "steamcmd" ]]; then
-    command_steamcmd $2
+    command_steamcmd "$2"
 elif [[ $1 == "update" ]]; then
     command_update
 elif [[ $1 == "supervisor-update" ]]; then
     command_supervisor_update
 elif [[ $1 == "run" ]]; then
-    command_run $2 $3
+    command_run "$2" "$3"
 elif [[ $1 == "monitor" ]]; then
-    command_monitor $2 $3
+    command_monitor "$2" "$3"
 else
     echo "Usage: $0 [command] arg, arg..."
     echo
