@@ -1,6 +1,6 @@
 #!/bin/bash
 command_steamcmd() {
-    if [[ -d $STEAMCMD_DIR ]]; then
+    if [[ -d "$STEAMCMD_DIR" ]]; then
         echo "SteamCMD directory already exists - remove it before installing SteamCMD again"
         exit 1
     fi
@@ -40,7 +40,7 @@ command_steamcmd() {
     fi
 
     tar zxf "$STEAMCMD_ARCHIVE"
-    chmod +x steamcmd.sh
+    chmod +x "$STEAMCMD_DIR/steamcmd.sh"
 
     echo "SteamCMD installed in $STEAMCMD_DIR"
 }

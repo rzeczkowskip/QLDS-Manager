@@ -19,6 +19,6 @@ command_run() {
     if [[ $SERVER_CONFIG == '' ]]; then
         echo "Server config $2 doesn't exists!"
     else
-        exec "$QL_DIR/$QL_EXEC $SERVER_CONFIG"
+        exec "$QL_DIR/$QL_EXEC" "$SERVER_CONFIG"
     fi
 }

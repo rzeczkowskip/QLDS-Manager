@@ -187,7 +187,6 @@ command_update() {
     echo "QLDS updated"
 }
 # https://github.com/rzeka/QLDS-Manager
-
 if [[ $1 == "steamcmd" ]]; then
     command_steamcmd $2
 elif [[ $1 == "update" ]]; then

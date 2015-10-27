@@ -9,7 +9,7 @@ command_supervisor_update() {
         SERVER_LIST=$(supervisorctl avail | grep qlds | awk '{print $1}' ORS=' ')
 
         echo "Updating servers"
-        $0 update
+        "$0" update
 
         echo "Stopping all supervisord QLDS tagged instances"
         supervisorctl stop $SERVER_LIST

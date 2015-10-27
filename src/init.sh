@@ -2,15 +2,15 @@
 # https://github.com/rzeka/QLDS-Manager
 
 if [[ $1 == "steamcmd" ]]; then
-    command_steamcmd $2
+    command_steamcmd "$2"
 elif [[ $1 == "update" ]]; then
     command_update
 elif [[ $1 == "supervisor-update" ]]; then
     command_supervisor_update
 elif [[ $1 == "run" ]]; then
-    command_run $2 $3
+    command_run "$2" "$3"
 elif [[ $1 == "monitor" ]]; then
-    command_monitor $2 $3
+    command_monitor "$2" "$3"
 else
     echo "Usage: $0 [command] arg, arg..."
     echo

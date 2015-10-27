@@ -20,6 +20,6 @@ check_outdated() {
 
 update_if_required() {
     if [[ check_outdated -eq 1 ]]; then
-        $0 update
+        "$0" update
     fi
 }

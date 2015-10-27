@@ -6,10 +6,10 @@ command_monitor() {
     if [[ $2 == '' ]]; then
         #get keys from $SERVER
         for ID in ${!SERVER[*]}; do
-            $0 monitor "$1" "$ID" &
+            "$0" monitor "$1" "$ID" &
         done
     else
-        until $0 run "$1" "$2"; do
+        until "$0" run "$1" "$2"; do
             echo "Restarting server $2"
             sleep 1 # sleep, so if server always exits unexpectedly, we won't kill server
         done
