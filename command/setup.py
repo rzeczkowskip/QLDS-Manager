@@ -26,6 +26,6 @@ class SetupController(ManagerDefaultController):
             config.set('directories', 'ql', os.path.expanduser(self.app.pargs.QLDIR))
 
         if self.app.pargs.STEAMDIR is not None:
-            config.set('directories', 'steamcmd', os.path.expanduser(self.app.pargs.STEAMCMD))
+            config.set('directories', 'steamcmd', os.path.expanduser(self.app.pargs.STEAMDIR))
 
         config.update()
