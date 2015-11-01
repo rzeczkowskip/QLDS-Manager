@@ -1,0 +1,6 @@
+[directories]
+steamcmd="~/steamcmd"
+ql="~/QLserver"
+
+[config]
+servers="~/.qldsmanager/servers"
