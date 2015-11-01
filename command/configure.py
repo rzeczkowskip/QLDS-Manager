@@ -2,12 +2,11 @@ from command.default import ManagerDefaultController
 from cement.core.controller import expose
 from util.config import Configuration
 import os
-import sys
 
 
-class SetupController(ManagerDefaultController):
+class ConfigureController(ManagerDefaultController):
     class Meta:
-        label = 'setup'
+        label = 'configure'
         description = 'Allows to set directories for SteamCMD and Quake Live'
         arguments = [
             (['--steamcmd'], dict(help='Sets location of steamcmd', dest='STEAMDIR')),
