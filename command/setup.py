@@ -12,14 +12,11 @@ class SetupController(ManagerDefaultController):
         arguments = [
             (['--steamcmd'], dict(help='Sets location of steamcmd', dest='STEAMDIR')),
             (['--ql'], dict(help='Sets location of QL Dedicated Server', dest='QLDIR')),
+            (['--servers'], dict(help='Sets location of server list config', dest='SERVERS')),
         ]
 
     @expose(hide=True)
     def default(self):
-        if self.app.pargs.QLDIR is None and self.app.pargs.STEAMDIR is None:
-            self._help()
-            sys.exit()
-
         config = Configuration()
 
         if self.app.pargs.QLDIR is not None:
@@ -28,4 +25,8 @@ class SetupController(ManagerDefaultController):
         if self.app.pargs.STEAMDIR is not None:
             config.set('directories', 'steamcmd', os.path.expanduser(self.app.pargs.STEAMDIR))
 
+        if self.app.pargs.SERVERS is not None:
+            config.set('config', 'servers', os.path.expanduser(self.app.pargs.SERVERS))
+
         config.update()
+        print('Configuration updated')
