@@ -78,6 +78,6 @@ class AbstractConfig:
 class Configuration(AbstractConfig):
     filename = 'config'
     required = dict(
-        directories=['ql', 'steamcmd'],
+        dir=['ql', 'steamcmd'],
         config=['servers']
     )
