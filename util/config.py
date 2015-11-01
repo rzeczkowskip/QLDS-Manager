@@ -1,9 +1,10 @@
 from configparser import ConfigParser
 import os
 
+
 class AbstractConfig:
     __config_dir = os.path.expanduser('~/.qldsmanager/') #has to end with /
-    filename = ''
+    filename = None
     required = None
 
     def __init__(self):

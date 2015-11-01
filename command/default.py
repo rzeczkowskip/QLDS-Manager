@@ -1,5 +1,6 @@
 from cement.core.controller import CementBaseController, expose
 
+
 class ManagerBaseController(CementBaseController):
     class Meta:
         label = 'base'

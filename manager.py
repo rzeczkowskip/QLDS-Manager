@@ -4,6 +4,7 @@ import util.config
 
 util.config.Configuration()
 
+
 class Manager(CementApp):
     class Meta:
         label = 'QLDS-Manager'

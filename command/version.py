@@ -7,6 +7,7 @@ QL Dedicated Server Manager v%s
 Copyright (c) 2015 Piotr Rzeczkowski
 """ % VERSION
 
+
 class VersionController(CementBaseController):
     class Meta:
         label = 'version'
