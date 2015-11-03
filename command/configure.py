@@ -9,23 +9,23 @@ class ConfigureController(ManagerDefaultController):
         label = 'configure'
         description = 'Allows to set directories for SteamCMD and Quake Live'
         arguments = [
-            (['--steamcmd'], dict(help='Sets location of steamcmd', dest='STEAMDIR')),
-            (['--ql'], dict(help='Sets location of QL Dedicated Server', dest='QLDIR')),
-            (['--servers'], dict(help='Sets location of server list config', dest='SERVERS')),
+            (['--steamcmd'], dict(help='Sets location of steamcmd', dest='steamdir')),
+            (['--ql'], dict(help='Sets location of QL Dedicated Server', dest='qldir')),
+            (['--servers'], dict(help='Sets location of server list config', dest='servers')),
         ]
 
     @expose(hide=True)
     def default(self):
         config = Configuration()
 
-        if self.app.pargs.QLDIR is not None:
-            config.set('directories', 'ql', os.path.expanduser(self.app.pargs.QLDIR))
+        if self.app.pargs.qldir is not None:
+            config.set('directories', 'ql', os.path.expanduser(self.app.pargs.qldir))
 
-        if self.app.pargs.STEAMDIR is not None:
-            config.set('directories', 'steamcmd', os.path.expanduser(self.app.pargs.STEAMDIR))
+        if self.app.pargs.steamdir is not None:
+            config.set('directories', 'steamcmd', os.path.expanduser(self.app.pargs.steamdir))
 
-        if self.app.pargs.SERVERS is not None:
-            config.set('config', 'servers', os.path.expanduser(self.app.pargs.SERVERS))
+        if self.app.pargs.servers is not None:
+            config.set('config', 'servers', os.path.expanduser(self.app.pargs.servers))
 
         config.update()
         print('Configuration updated')
