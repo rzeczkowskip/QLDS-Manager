@@ -32,7 +32,7 @@ class DownloadController(ManagerDefaultController):
             print(steamcmd_dir + ' exists. Remove it or change SteamCMD location with "setup" command')
             exit(30)
 
-        os.mkdir(steamcmd_dir)
+        os.makedirs(steamcmd_dir)
 
         if not os.access(steamcmd_dir, os.W_OK):
             print('Cannot get write access to ' + steamcmd_dir)
