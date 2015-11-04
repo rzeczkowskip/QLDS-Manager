@@ -1,6 +1,7 @@
 from command.default import ManagerDefaultController
 from cement.core.controller import expose
 from util.config import Configuration
+from util.filesystem import FSCheck
 from urllib.request import urlretrieve
 from subprocess import call
 import os
@@ -26,29 +27,28 @@ class DownloadController(ManagerDefaultController):
         config = Configuration()
 
         steamcmd_dir = os.path.expanduser(config.get('dir', 'steamcmd'))
+        steamcmd_dir_fs = FSCheck(steamcmd_dir, 'SteamCMD dir')
 
         #check if steamcmd dir exists
-        if os.path.isdir(steamcmd_dir):
-            print(steamcmd_dir + ' exists. Remove it or change SteamCMD location with "setup" command')
-            exit(30)
+        if steamcmd_dir_fs.exists(error=False):
+            print('% exists. Remove it or change SteamCMD location in settings' % steamcmd_dir)
+            exit(21)
 
         os.makedirs(steamcmd_dir)
 
-        if not os.access(steamcmd_dir, os.W_OK):
-            print('Cannot get write access to ' + steamcmd_dir)
-            exit(31)
+        steamcmd_dir_fs.access('w') #check for write access in dir
 
         print('Downloading SteamCMD archive')
         urlretrieve(self.steamcmd_url, steamcmd_dir + self.steamcmd_archive)
 
-        print('Extracting SteamCMD atchive to ' + steamcmd_dir)
+        print('Extracting SteamCMD atchive to %s' % steamcmd_dir)
         archive = tarfile.open(steamcmd_dir + self.steamcmd_archive)
         archive.extractall(steamcmd_dir)
 
         steamcmd_stat = os.stat(steamcmd_dir + '/steamcmd.sh')
         os.chmod(steamcmd_dir + '/steamcmd.sh', steamcmd_stat.st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
 
-        print('SteamCMD installed in ' + steamcmd_dir)
+        print('SteamCMD installed in %s' % steamcmd_dir)
         print('Remember that you need "lib32stdc++6" installed in your system')
 
     @expose(help='Downloads and updates QL Dedicated Server files')
@@ -57,13 +57,10 @@ class DownloadController(ManagerDefaultController):
 
         steamcmd = os.path.expanduser(config.get('dir', 'steamcmd') + '/steamcmd.sh')
 
-        if not os.path.exists(steamcmd):
-            print('SteamCMD executable doesn\'t exist. Install SteamCMD first')
-            exit(32)
+        steamcmd_fs = FSCheck(steamcmd, 'SteamCMD')
 
-        if not os.access(steamcmd, os.X_OK):
-            print('SteamCMD script (' + steamcmd + ') is not executable')
-            exit(31)
+        steamcmd_fs.exists()
+        steamcmd_fs.access('x')
 
         print('Downloading QL Dedicated Server files using SteamCMD...')
 
