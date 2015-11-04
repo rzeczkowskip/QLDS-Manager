@@ -30,10 +30,10 @@ class ConfigureController(ManagerDefaultController):
             config.set('config', 'servers', os.path.expanduser(self.app.pargs.servers))
 
         if self.app.pargs.supervisor is not None:
-            config.set('config', 'supervisor', os.path.expanduser(self.app.pargs.supervisor))
+            config.set('supervisor', 'supervisor', os.path.expanduser(self.app.pargs.supervisor))
 
         if self.app.pargs.supervisorctl is not None:
-            config.set('config', 'supervisorctl', os.path.expanduser(self.app.pargs.supervisorctl))
+            config.set('supervisor', 'supervisorctl', os.path.expanduser(self.app.pargs.supervisorctl))
 
         config.update()
         print('Configuration updated')
