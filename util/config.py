@@ -136,8 +136,6 @@ class ServerConfig(AbstractConfig):
                               ]))
             exit(11)
 
-        print('Configs are OK')
-
     def __compile(self):
         self.parameters = self.__parse_section('parameters')
 
