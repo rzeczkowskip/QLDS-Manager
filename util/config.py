@@ -36,7 +36,7 @@ class AbstractConfig:
     def __check_missing(self, options: dict):
         missing = self._has_missing(self.parser.sections(), options.keys())
         if missing:
-            print('Missing sections in configuration: ' + ', '.join(missing))
+            print('Missing sections in configuration: %s' % ', '.join(missing))
             exit(10)
 
         missing_options = dict()
@@ -46,7 +46,7 @@ class AbstractConfig:
                 missing_options[section] = missing
 
         if missing_options:
-            print('Missing options in sections\n  ' + '\n  '.join([
+            print('Missing options in sections\n  %s' % '\n  '.join([
                               '%s: %s' % (key, value) for (key, value) in missing_options.items()
                               ]))
             exit(11)
@@ -66,7 +66,7 @@ class AbstractConfig:
             os.mkdir(self.__config_dir)
 
         if os.path.isfile(config_file) and not os.access(config_file, os.W_OK):
-            raise IOError('Cannot write to file ' + config_file)
+            raise IOError('Cannot write to file %s' % config_file)
 
         with (open(config_file, 'w+')) as config_fp:
             self.parser.write(config_fp)
@@ -76,6 +76,9 @@ class AbstractConfig:
 
     def get(self, section, option):
         return self.parser.get(section, option)
+
+    def get_config_dir(self):
+        return self.__config_dir
 
     def extra_check(self):
         return True
@@ -122,18 +125,16 @@ class ServerConfig(AbstractConfig):
 
         missing_options = dict()
 
-        #for section in self.parser.sections():
-        #    if section.startswith('server'):
-        #        self.servers[section] = self.__parse_section(section)
-        #        missing = self.check_configuration(section, self.servers[section])
-        #        if missing:
-        #            missing_options[section] = missing
+        for sid,data in self.servers.items():
+            missing = self.check_required(data)
+            if missing:
+                missing_options[sid] = missing
 
-        #if missing_options:
-        #    print('Missing options in servers\n  ' + '\n  '.join([
-        #                      '%s: %s' % (key, value) for (key, value) in missing_options.items()
-        #                      ]))
-        #    exit(11)
+        if missing_options:
+            print('Missing options in servers\n  %s' % '\n  '.join([
+                              '%s: %s' % (key, value) for (key, value) in missing_options.items()
+                              ]))
+            exit(11)
 
         print('Configs are OK')
 
@@ -166,18 +167,20 @@ class ServerConfig(AbstractConfig):
 
         global_loop = 1
 
+        tmp_servers = {}
         for sid in self.servers:
             extend = None
             name = sid.split(':', 1)
             if len(name) > 1:
                 extend = name[1]
 
-            self.servers[sid] = self.__parse_server(sid, extend, global_loop)
+            tmp_servers[name[0]] = self.__parse_server(sid, extend, global_loop)
+
             global_loop += 1
             if extend is not None:
                 self.loop[extend] += 1
 
-        print(self.servers)
+        self.servers = tmp_servers
 
     def __parse_section(self, section):
         tmp = {}
@@ -232,5 +235,5 @@ class ServerConfig(AbstractConfig):
 
         return str_
 
-    def check_configuration(self, section: str, server: list):
+    def check_required(self, server: list):
         return self._has_missing(server, self.extra_required)
