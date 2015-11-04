@@ -1,11 +1,14 @@
 from util.config import Configuration
+from util.filesystem import FSCheck
 from configparser import ConfigParser
 import platform
 import os
+from subprocess import call
 
 
 class Supervisor:
     __config = Configuration()
+    process_prefix = 'qlds_'
 
     def __init__(self):
         self.__config_file = self.__config.get_config_dir() + '/supervisor.conf'
@@ -32,7 +35,7 @@ class Supervisor:
         ql_executable = self.get_ql_executable()
 
         for sid,data in servers.items():
-            name = 'qlds_' + sid
+            name = self.process_prefix + sid
             section = 'program:' + name
             parser.add_section(section)
             parser.set(section, 'command', self.build_command_line(data, ql_executable))
@@ -63,3 +66,25 @@ class Supervisor:
 
     def get_config_location(self):
         return self.__config_file
+
+    def start(self):
+        supervisor_executable = self.__config.get('supervisor', 'supervisor')
+        supervisor_executable_fs = FSCheck(supervisor_executable)
+
+        supervisor_executable_fs.exists()
+        supervisor_executable_fs.access('x')
+
+        return call([supervisor_executable, '-c', self.__config_file])
+
+    def ctl(self, args: list):
+        args = list(args)
+
+        ctl_executable = self.__config.get('supervisor', 'supervisorctl')
+        ctl_executable_fs = FSCheck(ctl_executable)
+
+        ctl_executable_fs.exists()
+        ctl_executable_fs.access('x')
+
+        call_args = [ctl_executable, '-c', self.__config_file] + args
+
+        return call(call_args)
