@@ -2,14 +2,14 @@ import os
 
 
 class FSCheck:
-    def __init__(self, filepath, name: None):
+    def __init__(self, filepath, name=None):
         if name is None:
             name = filepath
 
         self.filepath = filepath
         self.name = name
 
-    def exists(self, error: True):
+    def exists(self, error=True):
         if not os.path.exists(self.filepath):
             if error:
                 print('%s executable doesn\'t exist. Install it first' % self.name)
@@ -19,7 +19,7 @@ class FSCheck:
 
         return True
 
-    def access(self, type_, error: True):
+    def access(self, type_, error=True):
         if type_ in ['read', 'r']:
             access = os.R_OK
             access_human = 'read'
