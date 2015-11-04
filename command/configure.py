@@ -12,6 +12,8 @@ class ConfigureController(ManagerDefaultController):
             (['--steamcmd'], dict(help='Sets location of steamcmd', dest='steamdir')),
             (['--ql'], dict(help='Sets location of QL Dedicated Server', dest='qldir')),
             (['--servers'], dict(help='Sets location of server list config', dest='servers')),
+            (['--supervisor'], dict(help='Sets location of supervisord executable', dest='supervisor')),
+            (['--supervisorctl'], dict(help='Sets location of supervisorctl executable', dest='supervisorctl')),
         ]
 
     @expose(hide=True)
@@ -26,6 +28,12 @@ class ConfigureController(ManagerDefaultController):
 
         if self.app.pargs.servers is not None:
             config.set('config', 'servers', os.path.expanduser(self.app.pargs.servers))
+
+        if self.app.pargs.supervisor is not None:
+            config.set('config', 'supervisor', os.path.expanduser(self.app.pargs.supervisor))
+
+        if self.app.pargs.supervisorctl is not None:
+            config.set('config', 'supervisorctl', os.path.expanduser(self.app.pargs.supervisorctl))
 
         config.update()
         print('Configuration updated')
