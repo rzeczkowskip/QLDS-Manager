@@ -166,7 +166,8 @@ class ServerConfig(AbstractConfig):
         global_loop = 1
 
         tmp_servers = {}
-        for sid in self.servers:
+
+        for sid in sorted(self.servers):
             extend = None
             name = sid.split(':', 1)
             if len(name) > 1:
@@ -228,7 +229,7 @@ class ServerConfig(AbstractConfig):
                 '>>' + math + '<<',
                 str(eval_expr(
                     self.__replace_parameters(math, server, extend, global_loop))
-                )
+                    )
             )
 
         return str_
