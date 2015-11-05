@@ -38,7 +38,7 @@ class Supervisor:
             name = self.process_prefix + sid
             section = 'program:' + name
             parser.add_section(section)
-            parser.set(section, 'command', self.build_command_line(data, ql_executable))
+            parser.set(section, 'command', self.build_command_line(sid, data, ql_executable))
             parser.set(section, 'process_name', name)
             parser.set(section, 'autorestart', 'true')
 
@@ -48,8 +48,11 @@ class Supervisor:
         with (open(self.__config_file, 'w+')) as config_fp:
             parser.write(config_fp)
 
-    def build_command_line(self, server, executable):
-        command_line = [executable]
+    def build_command_line(self, sid, server, executable):
+        command_line = [
+            executable,
+            '+set fs_homepath %s/%s' % (os.path.expanduser('~/.quakelive/'), sid)
+        ]
 
         for k,v in server.items():
             command_line.append('+set %s %s' % (k, v))
