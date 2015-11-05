@@ -5,6 +5,9 @@ from util.supervisor import Supervisor
 from util.filesystem import FSCheck
 
 class SupervisorController(ManagerDefaultController):
+    supervisor = Supervisor()
+    servers = ServerConfig()
+
     class Meta:
         label = 'supervisor'
         description = 'Supervisor management'
@@ -15,27 +18,15 @@ class SupervisorController(ManagerDefaultController):
 
     @expose(help='Powers off supervisord and all its processes')
     def stop(self):
-        supervisor = Supervisor()
-
-        supervisor.ctl(['shutdown'])
+        self.supervisor.ctl(['shutdown'])
 
     @expose(help='Start supervisord service')
     def start(self):
-        supervisor = Supervisor()
+        self.supervisor.generate_config(self.servers.servers)
 
-        supervisor.start()
+        self.supervisor.start()
 
     @expose(help='Regenerates and reloads supervisord config file. This will restart modified servers!')
     def reload(self):
-        supervisor = Supervisor()
-        servers_config = ServerConfig()
-
-        supervisor.generate_config(servers_config.servers)
-
-        supervisor.ctl(['reload'])
-        supervisor.ctl(['update'])
-
-    @expose(help='Check if server\'s configuration is valid')
-    def check(self):
-        ServerConfig()
-        print('Configs are OK')
+        self.supervisor.generate_config(self.servers.servers)
+        self.supervisor.ctl(['update'])
