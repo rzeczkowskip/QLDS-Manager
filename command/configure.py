@@ -21,10 +21,10 @@ class ConfigureController(ManagerDefaultController):
         config = Configuration()
 
         if self.app.pargs.qldir is not None:
-            config.set('directories', 'ql', os.path.expanduser(self.app.pargs.qldir))
+            config.set('dir', 'ql', os.path.expanduser(self.app.pargs.qldir))
 
         if self.app.pargs.steamdir is not None:
-            config.set('directories', 'steamcmd', os.path.expanduser(self.app.pargs.steamdir))
+            config.set('dir', 'steamcmd', os.path.expanduser(self.app.pargs.steamdir))
 
         if self.app.pargs.servers is not None:
             config.set('config', 'servers', os.path.expanduser(self.app.pargs.servers))
