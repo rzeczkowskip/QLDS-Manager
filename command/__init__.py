@@ -4,6 +4,7 @@ from . import configure
 from . import download
 from . import server
 from . import supervisor
+from . import rcon
 
 commands = [
     default.ManagerBaseController,
@@ -11,5 +12,6 @@ commands = [
     configure.ConfigureController,
     download.DownloadController,
     server.ServerController,
-    supervisor.SupervisorController
+    supervisor.SupervisorController,
+    rcon.RconController
 ]
