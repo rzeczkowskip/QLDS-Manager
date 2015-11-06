@@ -34,6 +34,7 @@ class ServerController(ManagerDefaultController):
                 supervisor.ctl(['start', supervisor.process_prefix + sid])
             else:
                 print('Server %s doesn\'t exists' % str(sid))
+                exit(50)
 
     @expose(help='Stop server <server_id>')
     def stop(self):
@@ -45,6 +46,7 @@ class ServerController(ManagerDefaultController):
                 supervisor.ctl(['stop', supervisor.process_prefix + sid])
             else:
                 print('Server %s doesn\'t exists' % str(sid))
+                exit(50)
 
     @expose(help='Restart server <server_id>')
     def restart(self):
@@ -56,6 +58,7 @@ class ServerController(ManagerDefaultController):
                 supervisor.ctl(['restart', supervisor.process_prefix + sid])
             else:
                 print('Server %s doesn\'t exists' % str(sid))
+                exit(50)
 
     @expose(help='Attch server <server_id>')
     def attach(self):
@@ -67,4 +70,5 @@ class ServerController(ManagerDefaultController):
                 supervisor.ctl(['fg', supervisor.process_prefix + sid])
             else:
                 print('Server %s doesn\'t exists' % str(sid))
+                exit(50)
 
