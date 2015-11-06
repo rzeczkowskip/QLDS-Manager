@@ -1,6 +1,6 @@
 from cement.core.foundation import CementApp
 import command
-import util.config
+
 
 class Manager(CementApp):
     class Meta:

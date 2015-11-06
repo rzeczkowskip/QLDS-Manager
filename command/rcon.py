@@ -6,7 +6,6 @@ from util.rcon import Rcon
 
 class RconController(ManagerDefaultController):
     class Meta:
-        stacked_on = 'server'
         label = 'rcon'
         description = 'Rcon console'
         arguments = [
