@@ -66,5 +66,8 @@ class DownloadController(ManagerDefaultController):
 
         call([
             steamcmd,
-            '+login anonymous +force_install_dir %s +app_update %d +quit' % (config.get('dir', 'ql'), self.ql_appid)
+            '+login', 'anonymous',
+            '+force_install_dir', os.path.expanduser(config.get('dir', 'ql')),
+            '+app_update', str(self.ql_appid),
+            '+quit'
         ])
