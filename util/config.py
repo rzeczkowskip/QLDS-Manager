@@ -75,7 +75,10 @@ class AbstractConfig:
         return self.parser.set(section, option, value)
 
     def get(self, section, option):
-        return self.parser.get(section, option)
+        try:
+            return self.parser.get(section, option)
+        except:
+            return None
 
     def get_config_dir(self):
         return self.__config_dir
@@ -96,27 +99,29 @@ class Configuration(AbstractConfig):
 
 
 class ServerConfig(AbstractConfig):
+    config = Configuration()
+
     extra_required = ['net_port']
+
     servers = {}
     parameters = {}
     defaults = {}
     extra = {}
     loop = {}
 
-    def pre_parse(self):
-        config = Configuration()
+    servers_file = os.path.expanduser(config.get('config', 'servers'))
 
-        servers_file = os.path.expanduser(config.get('config', 'servers'))
-        servers_file_path = os.path.dirname(servers_file)
-        self.filename = servers_file
+    def pre_parse(self):
+        servers_file_path = os.path.dirname(self.servers_file)
+        self.filename = self.servers_file
 
         if not os.path.exists(servers_file_path):
             os.makedirs(servers_file_path)
 
-        if not os.path.exists(servers_file):
-            open(servers_file, 'a').close()
+        if not os.path.exists(self.servers_file):
+            open(self.servers_file, 'a').close()
 
-        if not os.access(servers_file, os.R_OK):
+        if not os.access(self.servers_file, os.R_OK):
             print('Cannot open server list configuration for reading')
             exit(33)
 
@@ -236,3 +241,7 @@ class ServerConfig(AbstractConfig):
 
     def check_required(self, server: list):
         return self._has_missing(server, self.extra_required)
+
+
+class RconConfig(ServerConfig):
+    servers_file = os.path.expanduser(config.get('config', 'rcon'))

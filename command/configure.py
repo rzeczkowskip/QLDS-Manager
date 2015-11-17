@@ -14,6 +14,7 @@ class ConfigureController(ManagerDefaultController):
             (['--servers'], dict(help='Sets location of server list config', dest='servers')),
             (['--supervisor'], dict(help='Sets location of supervisord executable', dest='supervisor')),
             (['--supervisorctl'], dict(help='Sets location of supervisorctl executable', dest='supervisorctl')),
+            (['--rcon'], dict(help='Sets location of rcon config (optional)', dest='rcon'))
         ]
 
     @expose(hide=True)
@@ -35,5 +36,23 @@ class ConfigureController(ManagerDefaultController):
         if self.app.pargs.supervisorctl is not None:
             config.set('supervisor', 'supervisorctl', os.path.expanduser(self.app.pargs.supervisorctl))
 
+        if self.app.pargs.rcon is not None:
+            config.set('config', 'rcon', os.path.expanduser(self.app.pargs.rcon))
+
         config.update()
+
+        data = [
+            ('QLDS dir', config.get('dir', 'ql')),
+            ('SteamCMD dir', config.get('dir', 'steamcmd')),
+
+            ('Supervisor', config.get('supervisor', 'supervisor')),
+            ('Supervisorctl', config.get('supervisor', 'supervisorctl')),
+
+            ('Servers config', config.get('config', 'servers')),
+            ('Rcon config', config.get('config', 'rcon'))
+        ]
+
+        for d in data:
+            print('%s:\n    %s' % d)
+
         print('Configuration updated')

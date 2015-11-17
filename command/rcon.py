@@ -1,6 +1,6 @@
 from command.default import ManagerDefaultController
 from cement.core.controller import expose
-from util.config import ServerConfig
+from util.config import ServerConfig,RconConfig
 from util.rcon import Rcon
 
 
@@ -20,14 +20,20 @@ class RconController(ManagerDefaultController):
         sid = self.app.pargs.server_id
 
         servers = ServerConfig().servers
+        rcon = RconConfig().servers
 
-        if sid not in servers:
+        is_rcon = False
+
+        if sid in rcon:
+            server = rcon[sid]
+            is_rcon = True
+        elif sid in servers:
+            server = servers[sid]
+        else:
             print('Server %s doesn\t exists' % sid)
             exit(50)
 
-        server = servers[sid]
-
-        if 'zmq_rcon_enable' not in server:
+        if not is_rcon and 'zmq_rcon_enable' not in server:
             print('Rcon not enabled in server configuration %s' % sid)
             exit(51)
 
