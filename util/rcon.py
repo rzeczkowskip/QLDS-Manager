@@ -8,6 +8,7 @@ import re
 
 
 class Rcon:
+    context = None
     socket = None
     monitor = None
     __queue = None
@@ -21,9 +22,9 @@ class Rcon:
     def connect(self):
         self.__queue = self.__input()
 
-        context = zmq.Context()
+        self.context = zmq.Context()
 
-        self.socket = context.socket(zmq.DEALER)
+        self.socket = self.context.socket(zmq.DEALER)
         self.monitor = self.socket.get_monitor_socket(zmq.EVENT_ALL)
 
         self.socket.plain_username = b'rcon'

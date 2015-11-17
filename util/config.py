@@ -244,4 +244,6 @@ class ServerConfig(AbstractConfig):
 
 
 class RconConfig(ServerConfig):
+    config = Configuration()
+    extra_required = ['zmq_rcon_port']
     servers_file = os.path.expanduser(config.get('config', 'rcon'))
