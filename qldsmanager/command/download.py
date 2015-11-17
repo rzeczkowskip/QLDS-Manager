@@ -1,12 +1,14 @@
-from command.default import ManagerDefaultController
-from cement.core.controller import expose
-from util.config import Configuration
-from util.filesystem import FSCheck
 from urllib.request import urlretrieve
 from subprocess import call
 import os
 import stat
 import tarfile
+
+from cement.core.controller import expose
+
+from qldsmanager.command.default import ManagerDefaultController
+from qldsmanager.util.config import Configuration
+from qldsmanager.util.filesystem import FSCheck
 
 
 class DownloadController(ManagerDefaultController):

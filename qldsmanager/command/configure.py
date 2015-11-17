@@ -1,7 +1,9 @@
-from command.default import ManagerDefaultController
-from cement.core.controller import expose
-from util.config import Configuration
 import os
+
+from cement.core.controller import expose
+
+from qldsmanager.command.default import ManagerDefaultController
+from qldsmanager.util.config import Configuration
 
 
 class ConfigureController(ManagerDefaultController):
