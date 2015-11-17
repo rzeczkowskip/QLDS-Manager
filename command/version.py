@@ -1,6 +1,6 @@
 from cement.core.controller import CementBaseController
 
-VERSION = '2.1.1-dev'
+VERSION = '2.1.1-RC1'
 
 BANNER = """
 QL Dedicated Server Manager v%s
