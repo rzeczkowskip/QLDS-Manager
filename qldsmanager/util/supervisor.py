@@ -1,9 +1,10 @@
-from util.config import Configuration
-from util.filesystem import FSCheck
 from configparser import ConfigParser
 import platform
 import os
 from subprocess import call
+
+from util.config import Configuration
+from qldsmanager.util.filesystem import FSCheck
 
 
 class Supervisor:

@@ -1,7 +1,8 @@
 from configparser import ConfigParser
 import os
 import re
-from util.matheval import eval_expr
+
+from qldsmanager.util.matheval import eval_expr
 
 
 class AbstractConfig:

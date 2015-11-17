@@ -5,6 +5,7 @@ class ManagerBaseController(CementBaseController):
     class Meta:
         label = 'base'
         description = 'QLDS Manager'
+        usage = 'qldsmanager (sub-commands ...) [options ...] {arguments ...}'
 
     @expose(hide=True)
     def default(self):
@@ -15,6 +16,7 @@ class ManagerDefaultController(CementBaseController):
     class Meta:
         stacked_on = 'base'
         stacked_type = 'nested'
+        usage = 'qldsmanager (sub-commands ...) [options ...] {arguments ...}'
 
     def _setup(self, base_app):
         super(ManagerDefaultController, self)._setup(base_app)
