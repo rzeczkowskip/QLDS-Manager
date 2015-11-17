@@ -5,6 +5,7 @@ VERSION = '2.1.1-dev'
 BANNER = """
 QL Dedicated Server Manager v%s
 Copyright (c) 2015 Piotr Rzeczkowski
+https://github.com/rzeka/QLDS-Manager
 """ % VERSION
 
 
