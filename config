@@ -1,0 +1,11 @@
+[dir]
+steamcmd = ~/steamcmd
+ql = ~/QLserver
+
+[config]
+servers = ~/.qldsmanager/servers
+rcon = ~/.qldsmanager/rcon
+
+[supervisor]
+supervisor = ~/.local/bin/supervisor
+supervisorctl = ~/.local/bin/supervisorctl
