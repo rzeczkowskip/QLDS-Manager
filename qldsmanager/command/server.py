@@ -21,7 +21,7 @@ class ServerController(ManagerDefaultController):
     @expose(hide=True)
     def default(self):
         if self.app.pargs.check:
-            self.check()
+            ServerConfig()
 
         self.app.args.parse_args(['--help'])
 
