@@ -3,7 +3,7 @@ import platform
 import os
 from subprocess import call
 
-from util.config import Configuration
+from qldsmanager.util.config import Configuration
 from qldsmanager.util.filesystem import FSCheck
 
 
