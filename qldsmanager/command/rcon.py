@@ -1,7 +1,7 @@
 from cement.core.controller import expose
 
 from qldsmanager.command.default import ManagerDefaultController
-from qldsmanager.util.config import ServerConfig,RconConfig
+from qldsmanager.util.config import ServerConfig, RconConfig
 from qldsmanager.util.rcon import Rcon
 
 
