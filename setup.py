@@ -75,6 +75,7 @@ setup(
     extras_require={
         #'dev': ['check-manifest'],
         #'test': ['coverage'],
+        'rcon': ['zmq']
     },
 
     # If there are data files included in your packages that need to be
