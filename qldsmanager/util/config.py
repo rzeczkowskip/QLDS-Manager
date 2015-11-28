@@ -2,19 +2,18 @@ from configparser import ConfigParser
 import os
 import re
 
+from qldsmanager import app_dir
 from qldsmanager.util.matheval import eval_expr
 
 
 class AbstractConfig:
-    __config_dir = os.path.expanduser('~/.qldsmanager/') #has to end with /
-    filename = None
-    filepath = None
-    required = None
-
     def __init__(self):
-        if self.filename == '':
-            self.filename = None
+        self.__config_dir = os.path.expanduser('~/.qldsmanager/') #has to end with /
+        self.filename = None
+        self.filepath = None
+        self.required = None
 
+        self._configure()
         self.pre_parse()
 
         self.parser = self.__get_parser(self.filename)
@@ -27,8 +26,8 @@ class AbstractConfig:
     def __get_parser(self, filename):
         parser = ConfigParser()
 
-        if os.path.isfile(filename):
-            parser.read_file(open(filename))
+        if os.path.isfile(app_dir + filename):
+            parser.read_file(open(app_dir + filename))
 
         parser.read(os.path.expanduser(self.__config_dir + filename))
 
@@ -90,27 +89,31 @@ class AbstractConfig:
     def pre_parse(self):
         return True
 
+    def _configure(self):
+        return True
+
 
 class Configuration(AbstractConfig):
-    filename = 'config'
-    required = dict(
-        dir=['ql', 'steamcmd'],
-        config=['servers']
-    )
+    def _configure(self):
+        self.filename = 'config'
+        self.required = dict(
+            dir=['ql', 'steamcmd'],
+            config=['servers']
+        )
 
 
 class ServerConfig(AbstractConfig):
-    config = Configuration()
+    def __init__(self):
+        super(ServerConfig).__init__(self)
+        self.extra_required = ['net_port']
 
-    extra_required = ['net_port']
+        self.servers = {}
+        self.parameters = {}
+        self.defaults = {}
+        self.extra = {}
+        self.loop = {}
 
-    servers = {}
-    parameters = {}
-    defaults = {}
-    extra = {}
-    loop = {}
-
-    servers_file = os.path.expanduser(config.get('config', 'servers'))
+        self.servers_file = os.path.expanduser(self.config.get('config', 'servers'))
 
     def pre_parse(self):
         servers_file_path = os.path.dirname(self.servers_file)
@@ -245,6 +248,6 @@ class ServerConfig(AbstractConfig):
 
 
 class RconConfig(ServerConfig):
-    config = Configuration()
-    extra_required = ['zmq_rcon_port']
-    servers_file = os.path.expanduser(config.get('config', 'rcon'))
+    def _configure(self):
+        self.extra_required = ['zmq_rcon_port']
+        self.servers_file = os.path.expanduser(self.config.get('config', 'rcon'))
