@@ -8,13 +8,13 @@ import re
 
 
 class Rcon:
-    context = None
-    socket = None
-    monitor = None
-    __queue = None
-    identity = uuid.uuid1().hex.encode()
-
     def __init__(self, host, port, password):
+        self.context = None
+        self.socket = None
+        self.monitor = None
+        self.__queue = None
+        self.identity = uuid.uuid1().hex.encode()
+
         self.host = host
         self.port = port
         self.password = password
