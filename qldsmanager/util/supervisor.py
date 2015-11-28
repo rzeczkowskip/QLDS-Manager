@@ -8,10 +8,10 @@ from qldsmanager.util.filesystem import FSCheck
 
 
 class Supervisor:
-    __config = Configuration()
-    process_prefix = 'qlds_'
-
     def __init__(self):
+        self.__config = Configuration()
+        self.process_prefix = 'qlds_'
+
         self.__config_file = self.__config.get_config_dir() + '/supervisor.conf'
 
     def generate_config(self, servers):

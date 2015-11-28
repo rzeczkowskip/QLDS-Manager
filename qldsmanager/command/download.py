@@ -12,13 +12,14 @@ from qldsmanager.util.filesystem import FSCheck
 
 
 class DownloadController(ManagerDefaultController):
-    steamcmd_url = 'https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz'
-    steamcmd_archive = '/steamcmd.tar.gz'
-    ql_appid = 349090
-
     class Meta:
         label = 'download'
         description = 'Allows to download/update SteamCMD and QL Dedicated Server files'
+
+    def __init(self):
+        self.steamcmd_url = 'https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz'
+        self.steamcmd_archive = '/steamcmd.tar.gz'
+        self.ql_appid = 349090
 
     @expose(hide=True)
     def default(self):

@@ -6,12 +6,13 @@ from qldsmanager.util.supervisor import Supervisor
 
 
 class SupervisorController(ManagerDefaultController):
-    supervisor = Supervisor()
-    servers = ServerConfig()
-
     class Meta:
         label = 'supervisor'
         description = 'Supervisor management'
+
+    def __init(self):
+        self.supervisor = Supervisor()
+        self.servers = ServerConfig()
 
     @expose(hide=True)
     def default(self):
