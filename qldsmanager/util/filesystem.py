@@ -6,7 +6,7 @@ class FSCheck:
         if name is None:
             name = filepath
 
-        self.filepath = filepath
+        self.filepath = os.path.expanduser(filepath)
         self.name = name
 
     def exists(self, error=True):
