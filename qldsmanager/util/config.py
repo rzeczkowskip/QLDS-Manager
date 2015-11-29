@@ -115,7 +115,7 @@ class ServerConfig(AbstractConfig):
 
         self.servers_file = os.path.expanduser(self.config.get('config', 'servers'))
 
-        super(ServerConfig, self).__init__(self)
+        super(ServerConfig, self).__init__()
 
     def pre_parse(self):
         servers_file_path = os.path.dirname(self.servers_file)
