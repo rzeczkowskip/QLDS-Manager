@@ -4,36 +4,46 @@ import re
 
 from qldsmanager import app_dir
 from qldsmanager.util.matheval import eval_expr
+from qldsmanager.util.filesystem import FSCheck
 
 
 class AbstractConfig:
     def __init__(self):
         self.__config_dir = os.path.expanduser('~/.qldsmanager/') #has to end with /
-        self.filename = None
-        self.filepath = None
-        self.required = None
+
+        if not hasattr(self, 'filename'):
+            self.filename = None
+
+        if not hasattr(self, 'filepath'):
+            self.filepath = None
+
+        if not hasattr(self, 'reuired'):
+            self.required = None
 
         self._configure()
-        self.pre_parse()
 
-        self.parser = self.__get_parser(self.filename)
+        self.parser = self.__get_parser()
 
         if self.required:
-            self.__check_missing(self.required)
+            self.__check_missing()
 
         self.extra_check()
 
-    def __get_parser(self, filename):
+    def __get_parser(self):
         parser = ConfigParser()
 
-        if os.path.isfile(app_dir + filename):
-            parser.read_file(open(app_dir + filename))
+        if self.filepath is None:
+            if os.path.isfile(app_dir + self.filename):
+                parser.read_file(open(app_dir + self.filename))
 
-        parser.read(os.path.expanduser(self.__config_dir + filename))
+            parser.read(os.path.expanduser(self.__config_dir + self.filename))
+        else:
+            parser.read(os.path.expanduser(self.filepath))
 
         return parser
 
-    def __check_missing(self, options: dict):
+    def __check_missing(self):
+        options = self.required
         missing = self._has_missing(self.parser.sections(), options.keys())
         if missing:
             print('Missing sections in configuration: %s' % ', '.join(missing))
@@ -113,23 +123,26 @@ class ServerConfig(AbstractConfig):
         self.extra = {}
         self.loop = {}
 
-        self.servers_file = os.path.expanduser(self.config.get('config', 'servers'))
+        self._configure()
 
-        super(ServerConfig, self).__init__()
+        self.filepath = os.path.expanduser(self.config.get('config', 'servers'))
+        self.filename = os.path.basename(self.filepath)
 
-    def pre_parse(self):
-        servers_file_path = os.path.dirname(self.servers_file)
-        self.filename = self.servers_file
+        servers_file_dir = os.path.dirname(self.filepath)
+        servers_file_dir_fs = FSCheck(servers_file_dir)
 
-        if not os.path.exists(servers_file_path):
-            os.makedirs(servers_file_path)
+        if not servers_file_dir_fs.exists(error=False):
+            os.makedirs(servers_file_dir)
 
-        if not os.path.exists(self.servers_file):
+        servers_file_fs = FSCheck(self.filepath)
+        if not servers_file_fs.exists(error=False):
             open(self.servers_file, 'a').close()
 
-        if not os.access(self.servers_file, os.R_OK):
+        if not servers_file_fs.access('r'):
             print('Cannot open server list configuration for reading')
             exit(33)
+
+        super(ServerConfig, self).__init__()
 
     def extra_check(self):
         self.__compile()
