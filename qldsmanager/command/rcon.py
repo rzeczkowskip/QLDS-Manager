@@ -31,7 +31,7 @@ class RconController(ManagerDefaultController):
         elif sid in servers:
             server = servers[sid]
         else:
-            print('Server %s doesn\t exists' % sid)
+            print('Server %s doesn\'t exists' % sid)
             exit(50)
 
         if not is_rcon and 'zmq_rcon_enable' not in server:
