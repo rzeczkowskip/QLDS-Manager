@@ -55,7 +55,7 @@ class Supervisor:
             '+set fs_homepath %s/%s' % (os.path.expanduser('~/.quakelive/'), sid)
         ]
 
-        for k,v in server.items():
+        for k,v in sorted(server.items()):
             command_line.append('+set %s %s' % (k, v))
 
         return ' '.join(command_line)
