@@ -12,14 +12,20 @@ from qldsmanager.util.filesystem import FSCheck
 
 
 class DownloadController(ManagerDefaultController):
+    steamcmd_url = 'https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz'
+    steamcmd_archive = '/steamcmd.tar.gz'
+    ql_appid = 349090
+    config = Configuration()
+
     class Meta:
         label = 'download'
         description = 'Allows to download/update SteamCMD and QL Dedicated Server files'
-
-    def __init(self):
-        self.steamcmd_url = 'https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz'
-        self.steamcmd_archive = '/steamcmd.tar.gz'
-        self.ql_appid = 349090
+        arguments = [
+            (['--items'], dict(
+                help='Workshop item ids (separated by space)',
+                nargs='*'
+            ))
+        ]
 
     @expose(hide=True)
     def default(self):
@@ -27,9 +33,7 @@ class DownloadController(ManagerDefaultController):
 
     @expose(help='Downloads and installs SteamCMD')
     def steamcmd(self):
-        config = Configuration()
-
-        steamcmd_dir = os.path.expanduser(config.get('dir', 'steamcmd'))
+        steamcmd_dir = os.path.expanduser(self.config.get('dir', 'steamcmd'))
         steamcmd_dir_fs = FSCheck(steamcmd_dir, 'SteamCMD dir')
 
         #check if steamcmd dir exists
@@ -56,21 +60,40 @@ class DownloadController(ManagerDefaultController):
 
     @expose(help='Downloads and updates QL Dedicated Server files')
     def ql(self):
-        config = Configuration()
-
-        steamcmd = os.path.expanduser(config.get('dir', 'steamcmd') + '/steamcmd.sh')
-
-        steamcmd_fs = FSCheck(steamcmd, 'SteamCMD')
-
-        steamcmd_fs.exists()
-        steamcmd_fs.access('x')
+        steamcmd = self.__steam_exists()
 
         print('Downloading QL Dedicated Server files using SteamCMD...')
 
         call([
             steamcmd,
             '+login', 'anonymous',
-            '+force_install_dir', os.path.expanduser(config.get('dir', 'ql')),
+            '+force_install_dir', os.path.expanduser(self.config.get('dir', 'ql')),
             '+app_update', str(self.ql_appid),
             '+quit'
         ])
+
+    @expose(help='Downloads or updates specified workshop items')
+    def workshop(self):
+        steamcmd = self.__steam_exists()
+
+        if not self.app.pargs.items:
+            print('You have to define items using "--items"')
+        else:
+            for item in self.app.pargs.items:
+                call([
+                    steamcmd,
+                    '+login', 'anonymous',
+                    '+workshop_download_item', str(self.ql_appid),
+                    '+app_update', item,
+                    '+quit'
+                ])
+
+    def __steam_exists(self):
+        steamcmd = os.path.expanduser(self.config.get('dir', 'steamcmd') + '/steamcmd.sh')
+
+        steamcmd_fs = FSCheck(steamcmd, 'SteamCMD')
+
+        steamcmd_fs.exists()
+        steamcmd_fs.access('x')
+
+        return steamcmd
