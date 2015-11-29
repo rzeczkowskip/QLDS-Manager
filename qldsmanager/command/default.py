@@ -20,10 +20,6 @@ class ManagerDefaultController(CementBaseController):
 
     def _setup(self, base_app):
         super(ManagerDefaultController, self)._setup(base_app)
-        self.__init()
-
-    def __init(self):
-        return True
 
     def _help(self):
         self.app.args.parse_args(['--help'])

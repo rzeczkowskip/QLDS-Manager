@@ -21,9 +21,11 @@ commands = [
     version.VersionController,
     configure.ConfigureController,
     download.DownloadController,
+    #download.DownloadWorkshopController,
 ]
 
 config = Configuration()
+
 supervisor_fs = FSCheck(config.get('supervisor', 'supervisor'))
 supervisorctl_fs = FSCheck(config.get('supervisor', 'supervisorctl'))
 
@@ -36,6 +38,7 @@ if (
 
     commands.append(server.ServerController)
     commands.append(supervisor.SupervisorController)
+
 
 if module_exists('zmq'):
     from qldsmanager.command import rcon
