@@ -104,7 +104,7 @@ class Configuration(AbstractConfig):
 
 class ServerConfig(AbstractConfig):
     def __init__(self):
-        super(ServerConfig).__init__(self)
+        self.config = Configuration()
         self.extra_required = ['net_port']
 
         self.servers = {}
@@ -114,6 +114,8 @@ class ServerConfig(AbstractConfig):
         self.loop = {}
 
         self.servers_file = os.path.expanduser(self.config.get('config', 'servers'))
+
+        super(ServerConfig, self).__init__(self)
 
     def pre_parse(self):
         servers_file_path = os.path.dirname(self.servers_file)
