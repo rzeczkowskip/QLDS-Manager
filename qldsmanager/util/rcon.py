@@ -39,9 +39,14 @@ class Rcon:
         event = self.socket.poll(100)
         event_monitor = self.__monitor()
 
-        if event_monitor is not None and event_monitor[0] == zmq.EVENT_CONNECTED:
-            self.socket.send(b'register')
-            print('Connected to %s:%s' % (self.host, self.port))
+        if event_monitor is not None:
+            if event_monitor[0] == zmq.EVENT_CONNECTED:
+                self.socket.send(b'register')
+                print('Connected to %s:%s' % (self.host, self.port))
+            elif event_monitor[0] == zmq.EVENT_CLOSED:
+                print('Could not connect to %s:%s' % (self.host, self.port))
+                print('Check if host, post and password are valid')
+                return False
 
         prev = None
         while not self.__queue.empty():
