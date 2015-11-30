@@ -5,4 +5,4 @@ Configuration
     :maxdepth: 20
 
     manager
-    
+    syntax
