@@ -1,6 +1,8 @@
 Manager configuration
 =====================
 
+Here you can find informations about QLDS Manager configuration
+
 Default values
 ---------------
 
