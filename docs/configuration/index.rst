@@ -6,3 +6,4 @@ Configuration
 
     manager
     syntax
+    servers
