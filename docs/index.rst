@@ -13,8 +13,4 @@ Documenatation
    :maxdepth: 20
 
    install
-
-.. toctree::
-   :maxdepth: 20
-
    configuration/index
