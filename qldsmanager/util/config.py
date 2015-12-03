@@ -122,6 +122,7 @@ class ServerConfig(AbstractConfig):
         self.defaults = {}
         self.extra = {}
         self.loop = {}
+        self.autostart = []
 
         self._configure()
 
@@ -223,6 +224,12 @@ class ServerConfig(AbstractConfig):
             server = tmp
 
         for k,v in server.items():
+            if k == '__autostart':
+                if v is not 0:
+                    self.autostart.append(sid)
+
+                continue
+
             if extend is not None and extend in self.extra:
                 if k in self.extra[extend]:
                     v = self.extra[extend][k].replace('${self}', v)
