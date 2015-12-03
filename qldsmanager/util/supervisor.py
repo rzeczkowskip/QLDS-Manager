@@ -40,13 +40,16 @@ class Supervisor:
 
         ql_executable = self.get_ql_executable()
 
-        for sid,data in servers.items():
+        for sid,data in servers.servers.items():
             name = self.process_prefix + sid
             section = 'program:' + name
             parser.add_section(section)
             parser.set(section, 'command', self.build_command_line(sid, data, ql_executable))
             parser.set(section, 'process_name', name)
             parser.set(section, 'autorestart', 'true')
+
+            if sid not in servers.autostart:
+                parser.set(section, 'autostart', 'false')
 
         if os.path.isfile(self.__config_file) and not os.access(self.__config_file, os.W_OK):
             raise IOError('Cannot write to file ' + self.__config_file)

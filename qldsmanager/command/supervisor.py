@@ -23,7 +23,7 @@ class SupervisorController(ManagerDefaultController):
 
     @expose(help='Start supervisord service')
     def start(self):
-        self.supervisor.generate_config(self.servers.servers)
+        self.supervisor.generate_config(self.servers)
 
         self.supervisor.start()
 
@@ -31,5 +31,5 @@ class SupervisorController(ManagerDefaultController):
     def reload(self):
         self.supervisor.start(output=False)
 
-        self.supervisor.generate_config(self.servers.servers)
+        self.supervisor.generate_config(self.servers)
         self.supervisor.ctl(['update'])
