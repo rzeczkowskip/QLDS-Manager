@@ -6,6 +6,11 @@ from subprocess import call
 from qldsmanager.util.config import Configuration
 from qldsmanager.util.filesystem import FSCheck
 
+try:
+    from subprocess import DEVNULL
+except ImportError:
+    DEVNULL = open(os.devnull, 'wb')
+
 
 class Supervisor:
     def __init__(self):
@@ -71,14 +76,17 @@ class Supervisor:
     def get_config_location(self):
         return self.__config_file
 
-    def start(self):
+    def start(self, output=True):
         supervisor_executable = self.__config.get('supervisor', 'supervisor')
         supervisor_executable_fs = FSCheck(supervisor_executable)
 
         supervisor_executable_fs.exists()
         supervisor_executable_fs.access('x')
 
-        return call([supervisor_executable, '-c', self.__config_file])
+        if output:
+            return call([supervisor_executable, '-c', self.__config_file])
+        else:
+            return call([supervisor_executable, '-c', self.__config_file], stdout=DEVNULL, stderr=DEVNULL)
 
     def ctl(self, args: list):
         args = list(args)
