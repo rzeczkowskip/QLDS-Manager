@@ -87,3 +87,38 @@ parameter starts from 1
 +-------+------------------------+
 | 27962 | Custom Hostname        |
 +-------+------------------------+
+
+Additional parsing of group variables
+-------------------------------------
+
+Let's say you want all server hostnames to use same schema for naming, even when you override it for single server.
+Of course you can remember, when overriding, to set hostname according to schema, but there's a better way. The
+``extra`` section.
+
+``extra`` section takes prepared server configuration, looks for defined variables and changes them according to its own
+schema.
+
+.. note::
+
+    The ``extra`` section has to "extend" servers group
+
+**Goal:** use schema ``-= QLDS Managed [server name] #[number] =-`` for servers
+
+First of all, we need servers group:
+
+.. code-block:: text
+
+    [defaults:publics]
+    net_port = >>27959 + ${loop}<<
+    sv_hostname = Server
+
+It's simplified as much as it can be. Now, we have to "extend" it. Create ``[extra:publics]`` section. ``publics`` is
+the name of servers group.
+
+.. code-block:: text
+
+    [extra:publics]
+    sv_hostname = "-= QLDS Manager ${self} #{$loop} =-"
+
+As you can see, there is ``${self}`` parameter introduced. It's replaced with original value of variable (sv_hostname)
+in this case, so you'' end up with desired hostname
