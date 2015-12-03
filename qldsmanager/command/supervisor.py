@@ -29,5 +29,7 @@ class SupervisorController(ManagerDefaultController):
 
     @expose(help='Regenerates and reloads supervisord config file. This will restart modified servers!')
     def reload(self):
+        self.supervisor.start(output=False)
+
         self.supervisor.generate_config(self.servers.servers)
         self.supervisor.ctl(['update'])
