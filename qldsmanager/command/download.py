@@ -14,7 +14,7 @@ from qldsmanager.util.filesystem import FSCheck
 class DownloadController(ManagerDefaultController):
     steamcmd_url = 'https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz'
     steamcmd_archive = '/steamcmd.tar.gz'
-    ql_appid = 282440
+    ql_appid = 349090
     config = Configuration()
 
     class Meta:
