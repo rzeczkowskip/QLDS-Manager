@@ -52,7 +52,7 @@ class Supervisor:
     def build_command_line(self, sid, server, executable):
         command_line = [
             executable,
-            '+set fs_homepath %s/%s' % (os.path.expanduser('~/.quakelive/'), sid)
+            '+set fs_homepath %s/%s' % (os.path.expanduser('~/.quakelive'), sid)
         ]
 
         for k,v in sorted(server.items()):
